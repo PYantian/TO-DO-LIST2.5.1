@@ -1,12 +1,15 @@
 body {
     font-family: Arial, sans-serif;
     background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
+    margin: 0;
+    -webkit-user-select: none; /* Chrome/Safari */
+    -moz-user-select: none;    /* Firefox */
+    -ms-user-select: none;     /* IE/Edge */
+    user-select: none;         /* Standard syntax */
 }
 
 .container {
@@ -14,28 +17,23 @@ body {
     padding: 20px;
     border-radius: 8px;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-    width: 400px;
+    width: 300px;
+    text-align: center;
 }
 
 h1 {
-    text-align: center; /* 标题居中 */
-    margin-bottom: 20px; /* 标题与表单之间的间距 */
-    color: #333; /* 标题颜色 */
+    margin-bottom: 20px;
 }
 
-form {
+.input-container {
     display: flex;
-    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 10px;
 }
 
-.input-group {
-    display: flex;
-    gap: 10px; /* 输入框和按钮之间的间距 */
-}
-
-input {
-    flex: 1; /* 输入框占据剩余空间 */
-    padding: 8px;
+input[type="text"] {
+    flex: 1;
+    padding: 10px;
     border: 1px solid #ccc;
     border-radius: 4px;
 }
@@ -43,7 +41,7 @@ input {
 button {
     padding: 10px 20px;
     background-color: #28a745;
-    color: white;
+    color: #fff;
     border: none;
     border-radius: 4px;
     cursor: pointer;
@@ -53,42 +51,57 @@ button:hover {
     background-color: #218838;
 }
 
-h2 {
-    margin-top: 20px;
-}
-
 ul {
     list-style-type: none;
     padding: 0;
+    margin-top: 20px;
 }
 
 li {
     background-color: #f8f9fa;
-    margin-bottom: 10px;
     padding: 10px;
+    margin-bottom: 5px;
     border-radius: 4px;
-    border: 1px solid #ddd;
-    transition: transform 0.3s ease, background-color 0.3s ease, color 0.3s ease; /* 添加滑动动画 */
-    position: relative; /* 为滑动效果提供定位 */
+    cursor: pointer;
+    position: relative;
     touch-action: manipulation; /* 优化触摸事件 */
+    transition: transform 0.3s ease; /* 添加滑动动画 */
 }
 
-li.swiped {  
-    background-color: #ff4d4d; /* 背景色变为红色 */
-    color: #fff; /* 文字颜色变为白色 */
+li.completed {
+    text-decoration: line-through;
+    color: #888;
 }
 
-select {
-    width: 100%;
-    padding: 8px;
-    margin-bottom: 10px;
-    border: 1px solid #ccc;
+li.important {
+    background-color: #ffcc00; /* 重点任务的背景色 */
+    /*font-weight: bold;  重点任务的字体加粗 */
+}
+
+/* 滑动删除时的背景效果 */
+li::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 0;
+    height: 100%;
+    background-color: #ff4d4d; /* 滑动时的背景色 */
+    transform: translateX(-100%); /* 初始状态隐藏 */
+    transition: transform 0.3s ease; /* 添加滑动动画 */
     border-radius: 4px;
 }
 
+li.swiped::after {
+    transform: translateX(0); /* 滑动时显示 */
+}
 
+/* 滑动删除时的文字效果 */
+li.swiped {
+    color: #fff; /* 文字颜色变为白色 */
+    background-color: #ff4d4d; /* 背景色变为红色 */
+}
 
-/* 滑动时文字逐渐消失 */
 li.swiped .task-text {
     opacity: 0; /* 滑动时文字逐渐消失 */
     transition: opacity 0.3s ease;
