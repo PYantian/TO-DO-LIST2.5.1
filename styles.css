@@ -75,6 +75,7 @@ li.completed {
 
 li.important {
     background-color: #ffcc00; /* 重点任务的背景色 */
+    font-weight: bold; /* 重点任务的字体加粗 */
 }
 
 /* 滑动删除时的背景效果 */
