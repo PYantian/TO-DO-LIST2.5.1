@@ -44,11 +44,12 @@ function addTask(taskText, isCompleted = false, isImportant = false) {
     }
 
     // 短按：标记任务为完成（划线效果）或移动到最前面
-    // 左滑：标记为重点任务
-    // 右滑：删除任务
+    // 左滑或右滑：删除任务
+    // 长按：标记任务为重点任务
     let isClick = true; // 默认是点击事件
     let touchStartX = 0;
     let touchStartY = 0;
+    let longPressTimer;
 
     li.addEventListener('touchstart', function(e) {
         const touch = e.touches[0];
@@ -56,6 +57,13 @@ function addTask(taskText, isCompleted = false, isImportant = false) {
         touchStartY = touch.clientY;
         isClick = true; // 标记为点击事件
         li.classList.remove('swiped'); // 移除滑动状态
+
+        // 开始长按计时器
+        longPressTimer = setTimeout(() => {
+            isClick = false; // 标记为长按事件
+            li.classList.toggle('important'); // 切换重点任务状态
+            saveTasks();
+        }, 1000); // 长按时间为 1 秒
     });
 
     li.addEventListener('touchend', function(e) {
@@ -63,23 +71,26 @@ function addTask(taskText, isCompleted = false, isImportant = false) {
         const touchEndX = touch.clientX;
         const touchEndY = touch.clientY;
 
+        // 清除长按计时器
+        clearTimeout(longPressTimer);
+
         // 计算滑动距离
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
 
         // 如果滑动距离较大，则认为是滑动操作，不是点击
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 50) {
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 100) {
             isClick = false; // 标记为滑动事件
 
             // 判断是左滑还是右滑
             if (diffX > 0) {
-                // 右滑：删除任务
+                // 右滑
                 li.classList.add('swiped'); // 添加滑动状态
                 setTimeout(() => deleteTask(li), 300); // 延迟删除任务，等待动画完成
             } else {
-                // 左滑：标记为重点任务
-                li.classList.toggle('important');
-                saveTasks();
+                // 左滑
+                li.classList.add('swiped'); // 添加滑动状态
+                setTimeout(() => deleteTask(li), 300); // 延迟删除任务，等待动画完成
             }
         }
 
